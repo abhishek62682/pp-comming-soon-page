@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Print Printers — Coming Soon</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,200;0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,200;1,9..40,300&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --brand-gray:  #D2D2D2;
+      --brand-sky:   #76b9f0;
+      --brand-blue:  #31a2ff;
+      --brand-navy:  #1e0d87;
+      --brand-black: #08070f;
+      --bg:          #f1ede6;
+      --bg-card:     rgba(255,255,255,0.62);
+      --border:      rgba(210,210,210,0.55);
+      --border-s:    rgba(210,210,210,0.75);
+      --ink:         var(--brand-black);
+      --ink-mute:    #5a5870;
+      --green:       #22c55e;
+    }
+
+    /* ── LOCK TO EXACTLY ONE SCREEN ── */
+    html, body {
+      height: 100%; width: 100%;
+      overflow: hidden;           /* NO scroll at all */
+      background: var(--bg);
+      font-family: 'Inter', sans-serif;
+      color: var(--ink);
+    }
+
+    /* Grain */
+    body::after {
+      content: ''; position: fixed; inset: 0; z-index: 999; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.4;
+    }
+
+    /* Mesh */
+    .mesh {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 65% 55% at 5%  15%, rgba(118,185,240,0.18) 0%, transparent 65%),
+        radial-gradient(ellipse 55% 50% at 95% 85%, rgba(30,13,135,0.10)   0%, transparent 60%),
+        radial-gradient(ellipse 40% 40% at 55% 45%, rgba(241,237,230,0.55) 0%, transparent 70%);
+    }
+
+    /* Deco lines */
+    .dline {
+      position: fixed; left: 0; right: 0; height: 1px; pointer-events: none; z-index: 0;
+      background: linear-gradient(90deg, transparent, rgba(118,185,240,0.35) 25%, rgba(118,185,240,0.35) 75%, transparent);
+      opacity: 0.5;
+    }
+
+    /* ── PAGE: full viewport, 3 rows ── */
+    .page {
+      position: relative; z-index: 1;
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      padding: clamp(1.2rem, 3vw, 2.5rem) clamp(1.25rem, 5vw, 4rem);
+    }
+
+    /* ── NAV ── */
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      animation: up 0.8s cubic-bezier(.16,1,.3,1) 0.05s both;
+    }
+    .logo-box > img { width: 200px; display: block; }
+
+    .status-pill {
+      display: flex; align-items: center; gap: 7px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-s);
+      border-radius: 999px;
+      padding: 7px 16px;
+      font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--ink-mute);
+      backdrop-filter: blur(8px);
+    }
+    .blink {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--green);
+      animation: blink 2s ease-in-out infinite;
+    }
+    @keyframes blink {
+      0%,100% { box-shadow: 0 0 0 0 rgba(34,197,94,.5); }
+      50%      { box-shadow: 0 0 0 6px rgba(34,197,94,0); }
+    }
+
+    /* ── HERO ── */
+    .hero {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      gap: clamp(1rem, 2.2vw, 1.8rem);
+    }
+
+    .eyebrow {
+      animation: up .8s cubic-bezier(.16,1,.3,1) 0.2s both;
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-s);
+      border-radius: 999px;
+      padding: 6px 18px;
+      font-size: 11px; font-weight: 500; letter-spacing: 0.13em;
+      text-transform: uppercase; color: var(--ink-mute);
+      backdrop-filter: blur(8px);
+    }
+    .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--brand-sky); display: inline-block; }
+
+    h1 {
+      animation: up .9s cubic-bezier(.16,1,.3,1) 0.35s both;
+      font-family: 'DM Sans', sans-serif;
+      font-size: clamp(2.8rem, 7.5vw, 6.5rem);
+      font-weight: 400;
+      line-height: 1.0;
+      letter-spacing: -0.03em;
+      color: var(--brand-black);
+    }
+    h1 b { font-weight: 700; display: block; color: var(--brand-black); }
+    h1 i {
+      font-style: italic; font-weight: 200; display: block;
+      background: linear-gradient(90deg, var(--brand-blue) 0%, var(--brand-navy) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .sub {
+      animation: up .9s cubic-bezier(.16,1,.3,1) 0.5s both;
+      font-size: clamp(0.82rem, 1.5vw, 1rem);
+      font-weight: 300; line-height: 1.75;
+      color: var(--ink-mute);
+      max-width: 44ch;
+    }
+
+    .sep {
+      animation: fadein 1s ease 0.6s both;
+      display: flex; align-items: center; gap: 12px;
+      width: 100%; max-width: 260px;
+    }
+    .sep-line { flex: 1; height: 1px; background: var(--brand-gray); opacity: 0.6; }
+
+    /* ── TIMER ──────────────────────────────────────
+       Key fixes:
+       • align-items: center  → colons vertically centered
+       • fixed width on .t-card → no jiggle
+       • font tabular-nums + min-width on .t-num → number swap doesn't resize
+    ─────────────────────────────────────────────── */
+    .timer {
+      animation: up .9s cubic-bezier(.16,1,.3,1) 0.65s both;
+      display: flex;
+      align-items: center;        /* ✅ centers colons with cards */
+      gap: clamp(6px, 1.5vw, 14px);
+    }
+
+    .t-card {
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-s);
+      border-radius: 22px;
+      /* ✅ Fixed dimensions — nothing will ever shift */
+      width: clamp(80px, 12vw, 120px);
+      height: clamp(88px, 13vw, 128px);
+      justify-content: center;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 1px 0 rgba(255,255,255,0.9) inset, 0 4px 24px rgba(30,13,135,0.07);
+      transition: transform .22s ease, box-shadow .22s ease;
+      flex-shrink: 0;
+    }
+    /* .t-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 1px 0 rgba(255,255,255,0.9) inset,
+                  0 18px 44px rgba(30,13,135,0.14),
+                  0 0 0 1.5px rgba(49,162,255,0.25);
+    } */
+
+    .t-num {
+      font-family: 'DM Sans', sans-serif;
+      font-size: clamp(1.8rem, 4.5vw, 3.4rem);
+      font-weight: 500; line-height: 1;
+      letter-spacing: -0.025em;
+      color: var(--brand-navy);
+      /* ✅ tabular nums = each digit same width, zero layout shift */
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum";
+      /* ✅ fixed width for 2 digits */
+      min-width: 2ch;
+      text-align: center;
+      display: block;
+    }
+
+    .t-lbl {
+      font-size: 9px; font-weight: 500;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--ink-mute);
+    }
+
+    /* ✅ Colon: centered with cards, no extra padding tricks */
+    .colon {
+      font-family: 'DM Sans', sans-serif;
+      font-size: clamp(1.4rem, 3.5vw, 2.6rem);
+      font-weight: 200;
+      color: var(--brand-sky);
+      line-height: 1;
+      user-select: none;
+      flex-shrink: 0;
+      /* nudge up slightly to optically center between number rows */
+      margin-bottom: 14px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      animation: up .9s cubic-bezier(.16,1,.3,1) 0.85s both;
+      display: flex; flex-direction: column; align-items: center; gap: 14px;
+    }
+
+    .f-sep { display: flex; align-items: center; gap: 10px; width: 100%; max-width: 360px; }
+    .f-sep-line { flex: 1; height: 1px; background: var(--brand-gray); opacity: 0.5; }
+
+    .contacts {
+      display: flex; flex-wrap: wrap;
+      align-items: center; justify-content: center;
+      gap: 6px 18px;
+    }
+    .c-link {
+      display: flex; align-items: center; gap: 8px;
+      text-decoration: none; color: var(--ink-mute);
+      font-size: 13px; font-weight: 400;
+      transition: color .2s; white-space: nowrap;
+    }
+    .c-link:hover { color: var(--brand-blue); }
+    .c-icon {
+      width: 30px; height: 30px; border-radius: 9px;
+      background: rgba(255,255,255,0.65);
+      border: 1px solid var(--border-s);
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color .2s, background .2s; flex-shrink: 0;
+    }
+    .c-link:hover .c-icon {
+      border-color: rgba(49,162,255,0.4);
+      background: rgba(49,162,255,0.06);
+    }
+    .c-sep { width: 4px; height: 4px; border-radius: 50%; background: var(--brand-gray); }
+
+    .f-note { font-size: 11px; letter-spacing: 0.04em; text-align: center; }
+
+    /* ── Animations ── */
+    @keyframes up {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadein {
+      from { opacity: 0; } to { opacity: 1; }
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 520px) {
+      .status-pill { display: none; }
+      .c-sep { display: none; }
+      .timer { gap: 5px; }
+      .t-card { width: clamp(68px, 20vw, 90px); height: clamp(76px, 21vw, 96px); }
+      .logo-box > img { width: 140px; display: block; }
+
+
+    }
+  </style>
+</head>
+<body>
+
+  <div class="mesh"></div>
+  
+  <div class="page">
+
+    <!-- NAV -->
+    <nav>
+      <div class="logo-box">
+        <img src="./assets/logo-removebg-preview.png" alt="Print Printers"/>
+      </div>
+      <div class="status-pill"><div class="blink"></div>In the Works</div>
+    </nav>
+
+    <!-- HERO -->
+    <main class="hero">
+
+      <div class="eyebrow">
+        <span class="dot"></span>
+        New Website Coming Soon
+        <span class="dot"></span>
+      </div>
+
+      <h1>
+        You Think.
+        We Print.
+      </h1>
+
+      <p class="sub">
+        Our brand-new website is being crafted with the same care and precision
+        we bring to every print run. Three decades of expertise — refreshed for you.
+      </p>
+
+      <div class="sep">
+        <div class="sep-line"></div>
+        <span class="dot"></span>
+        <div class="sep-line"></div>
+      </div>
+
+      <!-- Countdown Timer -->
+      <div class="timer">
+        <div class="t-card">
+          <span class="t-num" id="days">00</span>
+          <span class="t-lbl">Days</span>
+        </div>
+        <span class="colon">:</span>
+        <div class="t-card">
+          <span class="t-num" id="hours">00</span>
+          <span class="t-lbl">Hours</span>
+        </div>
+        <span class="colon">:</span>
+        <div class="t-card">
+          <span class="t-num" id="minutes">00</span>
+          <span class="t-lbl">Mins</span>
+        </div>
+        <span class="colon">:</span>
+        <div class="t-card">
+          <span class="t-num" id="seconds">00</span>
+          <span class="t-lbl">Secs</span>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="f-sep">
+        <div class="f-sep-line"></div>
+        <span class="dot"></span>
+        <div class="f-sep-line"></div>
+      </div>
+
+      <div class="contacts">
+        <a href="mailto:print@printprinters.com" class="c-link">
+          <div class="c-icon">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="4" width="20" height="16" rx="2"/>
+              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+            </svg>
+          </div>
+          print@printprinters.com
+        </a>
+
+        <div class="c-sep"></div>
+
+        <a href="tel:+919910087788" class="c-link">
+          <div class="c-icon">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.59 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.56a16 16 0 0 0 5.55 5.55l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+            </svg>
+          </div>
+          🇮🇳 +91 99100 87788
+        </a>
+
+        <div class="c-sep"></div>
+
+        <a href="tel:+12024700880" class="c-link">
+          <div class="c-icon">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.59 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.56a16 16 0 0 0 5.55 5.55l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+            </svg>
+          </div>
+          🇺🇸 +1 202 470 0880
+        </a>
+      </div>
+
+      <p class="f-note">© 2026 Print Printers · Citicap Channels Pvt. Ltd · New Delhi, India</p>
+    </footer>
+
+  </div>
+
+<script>
+  // 🔒 STATIC LAUNCH DATE (UTC)
+  const LAUNCH = new Date('2026-03-05T16:52:35.983Z');
+
+  const pad = n => String(n).padStart(2, '0');
+
+  const interval = setInterval(tick, 1000);
+
+  function tick() {
+    const now = new Date();
+    const d = LAUNCH - now;
+
+    // 🚫 Prevent negative time
+    if (d <= 0) {
+      clearInterval(interval);
+
+      document.getElementById('days').textContent = "00";
+      document.getElementById('hours').textContent = "00";
+      document.getElementById('minutes').textContent = "00";
+      document.getElementById('seconds').textContent = "00";
+
+      document.querySelector('.timer').innerHTML = `
+        <div style="
+          font-family:'DM Sans',sans-serif;
+          font-size:1.5rem;
+          font-weight:500;
+          color:var(--brand-navy);
+        ">
+          We Are Live 🚀
+        </div>
+      `;
+
+      return;
+    }
+
+    const days    = Math.floor(d / 86400000);
+    const hours   = Math.floor((d % 86400000) / 3600000);
+    const minutes = Math.floor((d % 3600000) / 60000);
+    const seconds = Math.floor((d % 60000) / 1000);
+
+    document.getElementById('days').textContent    = pad(days);
+    document.getElementById('hours').textContent   = pad(hours);
+    document.getElementById('minutes').textContent = pad(minutes);
+    document.getElementById('seconds').textContent = pad(seconds);
+  }
+
+  tick();
+</script>
+
+</body>
+</html>
